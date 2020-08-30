@@ -24,6 +24,10 @@ public class BaseResponse {
         return code == ResultCode.SUCCESS;
     }
 
+    public static BaseResponse Ok(){
+        return BaseResponse.builder().code(ResultCode.SUCCESS).message(ResultCode.SUCCESS.getMsg()).build();
+    }
+
     public BaseResponse(){
         this.setCode(ResultCode.SUCCESS);
         this.setMessage(ResultCode.SUCCESS.getMsg());

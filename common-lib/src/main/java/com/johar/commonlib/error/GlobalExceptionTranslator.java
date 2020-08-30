@@ -5,6 +5,7 @@ import com.johar.commonlib.api.ResultCode;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -32,6 +33,17 @@ import java.util.Set;
 @RestControllerAdvice
 public class GlobalExceptionTranslator {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionTranslator.class);
+
+    @ExceptionHandler(ConversionFailedException.class)
+    public BaseResponse handleError(ConversionFailedException e){
+        logger.error("Conversion Failed:", e);
+        String message = String.format("%s:%s -> %s", e.getSourceType(), e.getTargetType(), e.getMessage());
+        return BaseResponse
+                .builder()
+                .message(message)
+                .code(ResultCode.NOT_FOUND)
+                .build();
+    }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public BaseResponse handlerError(MissingServletRequestParameterException e){
