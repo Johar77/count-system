@@ -5,14 +5,16 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.johar.countingservice.domain.countview.entity.CountPerMinute;
+import com.johar.countingservice.domain.countview.entity.CountViewInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,5 +54,27 @@ public class CountViewService {
                 .build();
     }
 
+    public synchronized void addCountViewEvent(@NotNull CountViewInfo countViewInfo){
+        CountPerMinute newValue = toCountPerMinute(countViewInfo);
+        List<CountPerMinute> countPerMinutes = countViewCache.getIfPresent(countViewInfo.getCountTime());
+        if (countPerMinutes == null){
+            List<CountPerMinute> newCollection = new ArrayList<>();
+            newCollection.add(newValue);
+            countViewCache.put(countViewInfo.getCountTime(), newCollection);
+            return;
+        }
 
+        if (countPerMinutes.contains(newValue)){
+            countPerMinutes.stream().filter(countPerMinute -> countPerMinute.getVideoId() == newValue.getVideoId())
+                    .map(countPerMinute -> countPerMinute.add(countViewInfo.getEventType(), countViewInfo.getCount()))
+                    .forEach(countPerMinute -> log.info("{}-{}-{}-{}", countPerMinute.getCountTime(), countPerMinute.getVideoId(), countPerMinute.getEventCount(countViewInfo.getEventType())));
+        } else {
+            countPerMinutes.add(newValue);
+        }
+    }
+
+    private CountPerMinute toCountPerMinute(@NotNull CountViewInfo countViewInfo){
+        CountPerMinute countPerMinute = new CountPerMinute(countViewInfo.getCountTime(), countViewInfo.getVideoInfo().getId(), countViewInfo.getEventType(), countViewInfo.getCount());
+        return countPerMinute;
+    }
 }

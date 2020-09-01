@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CountPerMinute {
 
+    private final Integer ZERO = 0;
+
     /**
      * 格式：yyyy-MM-dd HH:mm:00，例如：2020-08-30 16：30：00
      */
@@ -30,19 +32,32 @@ public class CountPerMinute {
     public CountPerMinute(Date countTime, int videoId) {
         this.countTime = countTime;
         this.videoId = videoId;
-        counts = new ConcurrentHashMap<>(EventType.values().length);
+        this.counts = new ConcurrentHashMap<>(EventType.values().length);
+        initMap();
     }
 
     public CountPerMinute(Date countTime, int videoId, EventType eventType, Integer count) {
         this.countTime = countTime;
         this.videoId = videoId;
         this.counts = new ConcurrentHashMap<>(EventType.values().length);
+        initMap();
         this.counts.put(eventType, count);
     }
 
-    public synchronized void add(EventType eventType, Integer count){
-        Integer initialValue = this.counts.getOrDefault(eventType, 0);
+    public synchronized CountPerMinute add(EventType eventType, Integer count){
+        Integer initialValue = this.counts.getOrDefault(eventType, ZERO);
         this.counts.put(eventType, initialValue + count);
+        return this;
+    }
+
+    public Integer getEventCount(EventType type){
+        return this.counts.getOrDefault(type, ZERO);
+    }
+
+    private void initMap(){
+        for(EventType type : EventType.values()){
+            this.counts.put(type, ZERO);
+        }
     }
 
     @Override
