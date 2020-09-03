@@ -6,6 +6,7 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.johar.countingservice.domain.countview.entity.CountPerMinute;
 import com.johar.countingservice.domain.countview.entity.CountViewInfo;
+import com.johar.countingservice.domain.countview.entity.EventType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,13 +44,13 @@ public class CountViewService {
             public void onRemoval(RemovalNotification<Date, List<CountPerMinute>> notification) {
                 // 批量发送到kafka
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                log.info("{} -> {}", df.format(System.currentTimeMillis()), df.format(notification.getKey()));
+                log.info("{} -> {} : {} : {}", df.format(System.currentTimeMillis()), df.format(notification.getKey()));
             }
         };
         this.countViewCache = CacheBuilder
                 .newBuilder()
-                .expireAfterWrite(internalTime, TimeUnit.SECONDS)
                 .initialCapacity(initialCapacity)
+                .expireAfterWrite(internalTime, TimeUnit.SECONDS)
                 .removalListener(removalListener)
                 .build();
     }

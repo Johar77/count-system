@@ -1,6 +1,6 @@
 package com.johar.countingservice.domain.videoinfo.entity;
 
-import lombok.Data;
+import lombok.*;
 
 /**
  * @ClassName: VideoInfo
@@ -10,6 +10,10 @@ import lombok.Data;
  * @Since: 1.0.0
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class VideoInfo {
     private int id;
     private String name;

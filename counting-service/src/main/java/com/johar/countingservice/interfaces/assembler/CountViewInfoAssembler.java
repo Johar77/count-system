@@ -2,6 +2,7 @@ package com.johar.countingservice.interfaces.assembler;
 
 import com.johar.countingservice.domain.countview.entity.CountViewInfo;
 import com.johar.countingservice.domain.countview.entity.EventType;
+import com.johar.countingservice.domain.videoinfo.entity.VideoInfo;
 
 import java.util.Date;
 
@@ -16,11 +17,16 @@ public class CountViewInfoAssembler {
 
     public static CountViewInfo toDo(Date countTime, int videoId, EventType eventType, int count){
 
+        VideoInfo videoInfo = VideoInfo.builder()
+                .id(videoId)
+                .name("测试")
+                .build();
         CountViewInfo countViewInfo = CountViewInfo
                                             .builder()
                                             .countTime(countTime)
                                             .eventType(eventType)
                                             .count(count)
+                                            .videoInfo(videoInfo)
                                             .build();
         return countViewInfo;
     }

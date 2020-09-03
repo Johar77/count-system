@@ -33,6 +33,7 @@ public class CountViewApi {
     @PostMapping("/{videoId}/view-event")
     public BaseResponse countViewEvent(@PathVariable("videoId") int videoId){
         log.info("view event: {}-{}", EventType.VIEW, videoId);
+        Date date = new Date();
         CountViewInfo dto = CountViewInfoAssembler.toDo(new Date(), videoId, EventType.VIEW, DEFAULT_INCREMENT);
         countViewApplicationService.addCountViewEvent(dto);
         return BaseResponse.Ok();
