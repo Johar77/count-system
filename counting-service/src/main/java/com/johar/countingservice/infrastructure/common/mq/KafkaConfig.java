@@ -1,6 +1,6 @@
 package com.johar.countingservice.infrastructure.common.mq;
 
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +46,7 @@ public class KafkaConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.ACKS_CONFIG, "1");
+        props.put(ProducerConfig.ACKS_CONFIG, "0");
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1);
         props.put(ProducerConfig.LINGER_MS_CONFIG, 500);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -66,7 +66,7 @@ public class KafkaConfig {
      * @return
      */
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate(DefaultKafkaProducerFactory produceFactory){
-        return new KafkaTemplate<String, Object>(produceFactory);
+    public KafkaTemplate<String, String> kafkaTemplate(DefaultKafkaProducerFactory produceFactory){
+        return new KafkaTemplate<String, String>(produceFactory);
     }
 }

@@ -4,6 +4,7 @@ import com.johar.commonlib.api.BaseResponse;
 import com.johar.countingservice.application.service.CountViewApplicationService;
 import com.johar.countingservice.domain.countview.entity.CountViewInfo;
 import com.johar.countingservice.domain.countview.entity.EventType;
+import com.johar.countingservice.infrastructure.util.CountTimeGenerator;
 import com.johar.countingservice.interfaces.assembler.CountViewInfoAssembler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class CountViewApi {
     public BaseResponse countViewEvent(@PathVariable("videoId") int videoId){
         log.info("view event: {}-{}", EventType.VIEW, videoId);
         Date date = new Date();
-        CountViewInfo dto = CountViewInfoAssembler.toDo(new Date(), videoId, EventType.VIEW, DEFAULT_INCREMENT);
+        CountViewInfo dto = CountViewInfoAssembler.toDo(CountTimeGenerator.currentTime(), videoId, EventType.VIEW, DEFAULT_INCREMENT);
         countViewApplicationService.addCountViewEvent(dto);
         return BaseResponse.Ok();
     }
