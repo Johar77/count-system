@@ -25,13 +25,28 @@ import java.util.List;
 @Slf4j
 public class KafkaProducer {
 
+    private final int MAX_NUM_PER_TIME = 10000;
+
     @Value("${spring.kafka.template.default-topic}")
     private String topicName;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void publish(List<CountPerMinute> messages)  {
+    public void publish(List<CountPerMinute> messages) {
+        int i = 0;
+        while (i * MAX_NUM_PER_TIME < messages.size()){
+            int endIndex = Math.min((i + 1) * MAX_NUM_PER_TIME, messages.size());
+            publishMessage(messages.subList(i * MAX_NUM_PER_TIME, endIndex));
+            i++;
+        }
+    }
+
+    /**
+     * 最多1000个
+     * @param messages
+     */
+    private void publishMessage(List<CountPerMinute> messages){
         String message = null;
         try {
             message = JacksonUtils.enhancedObjectMapper().writeValueAsString(messages);

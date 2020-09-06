@@ -33,8 +33,7 @@ public class CountViewApi {
 
     @PostMapping("/{videoId}/view-event")
     public BaseResponse countViewEvent(@PathVariable("videoId") int videoId){
-        log.info("view event: {}-{}", EventType.VIEW, videoId);
-        Date date = new Date();
+        log.debug("view event: {}-{}", EventType.VIEW, videoId);
         CountViewInfo dto = CountViewInfoAssembler.toDo(CountTimeGenerator.currentTime(), videoId, EventType.VIEW, DEFAULT_INCREMENT);
         countViewApplicationService.addCountViewEvent(dto);
         return BaseResponse.Ok();
@@ -42,7 +41,9 @@ public class CountViewApi {
 
     @PostMapping("/{videoId}/{eventType}/event")
     public BaseResponse countViewEvent(@PathVariable("videoId") int videoId, @PathVariable("eventType") EventType eventType){
-        log.info("view event: {}-{}", eventType, videoId);
+        log.debug("view event: {}-{}", eventType, videoId);
+        CountViewInfo dto = CountViewInfoAssembler.toDo(CountTimeGenerator.currentTime(), videoId, eventType, DEFAULT_INCREMENT);
+        countViewApplicationService.addCountViewEvent(dto);
         return BaseResponse.Ok();
     }
 }
