@@ -1,11 +1,9 @@
 package com.johar.aggregatorservice.domain.countview.repository.po;
 
 import com.johar.aggregatorservice.domain.countview.entity.EventType;
+import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -17,15 +15,18 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "t_video_stats")
+@Data
 public class VideoStatsPo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Timestamp timestamp;
+    private long timestamp;
 
     private int count;
 
     private EventType eventType;
+
+    private long videoInfoId;
 }

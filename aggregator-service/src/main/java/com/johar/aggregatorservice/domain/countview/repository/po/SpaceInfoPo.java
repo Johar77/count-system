@@ -2,10 +2,7 @@ package com.johar.aggregatorservice.domain.countview.repository.po;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @ClassName: SpaceInfoPo
@@ -19,8 +16,9 @@ import javax.persistence.Table;
 @Data
 public class SpaceInfoPo {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 128, name = "name")
     private String name;
 }
