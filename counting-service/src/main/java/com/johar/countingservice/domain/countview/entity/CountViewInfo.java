@@ -1,6 +1,5 @@
 package com.johar.countingservice.domain.countview.entity;
 
-import com.johar.countingservice.domain.videoinfo.entity.VideoInfo;
 import lombok.*;
 
 import java.util.Date;
@@ -21,5 +20,5 @@ public class CountViewInfo {
     private VideoInfo videoInfo;
     private Date countTime;
     private EventType eventType;
-    private int count;
+    private long count;
 }

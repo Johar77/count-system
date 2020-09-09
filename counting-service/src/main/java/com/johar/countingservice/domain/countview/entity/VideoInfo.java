@@ -1,21 +1,19 @@
-package com.johar.countingservice.domain.videoinfo.entity;
+package com.johar.countingservice.domain.countview.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 /**
  * @ClassName: VideoInfo
  * @Description: TODO
  * @Author: Johar
- * @Date: 2020-08-30 14:57
+ * @Date: 2020-09-08 23:40
  * @Since: 1.0.0
  */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 public class VideoInfo {
-    private int id;
+    private long id;
     private String name;
     private SpaceInfo spaceInfo;
 }

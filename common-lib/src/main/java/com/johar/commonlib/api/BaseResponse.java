@@ -16,29 +16,29 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BaseResponse {
     @Builder.Default
-    private ResultCode code = ResultCode.SUCCESS;
+    private int code = ResultCode.SUCCESS.getCode();
 
-    private String message;
+    @Builder.Default
+    private String message = ResultCode.SUCCESS.getMsg();
 
     public boolean isSuccess(){
-        return code == ResultCode.SUCCESS;
+        return code == ResultCode.SUCCESS.getCode();
     }
 
     public static BaseResponse Ok(){
-        return BaseResponse.builder().code(ResultCode.SUCCESS).message(ResultCode.SUCCESS.getMsg()).build();
+        return BaseResponse.builder().code(ResultCode.SUCCESS.getCode()).message(ResultCode.SUCCESS.getMsg()).build();
     }
 
     public BaseResponse(){
-        this.setCode(ResultCode.SUCCESS);
-        this.setMessage(ResultCode.SUCCESS.getMsg());
+        this(ResultCode.SUCCESS);
     }
 
     public BaseResponse(ResultCode resultCode){
-        this.setCode(resultCode);
+        this.setCode(resultCode.getCode());
         this.setMessage(resultCode.getMsg());
     }
 
-    public BaseResponse(ResultCode resultCode, String message){
+    public BaseResponse(int resultCode, String message){
         this.setCode(resultCode);
         this.setMessage(message);
     }

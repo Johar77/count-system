@@ -41,7 +41,7 @@ public class GlobalExceptionTranslator {
         return BaseResponse
                 .builder()
                 .message(message)
-                .code(ResultCode.NOT_FOUND)
+                .code(ResultCode.NOT_FOUND.getCode())
                 .build();
     }
 
@@ -52,7 +52,7 @@ public class GlobalExceptionTranslator {
         return BaseResponse
                 .builder()
                 .message(message)
-                .code(ResultCode.PARAM_MISS)
+                .code(ResultCode.PARAM_MISS.getCode())
                 .build();
     }
 
@@ -63,7 +63,7 @@ public class GlobalExceptionTranslator {
         return  BaseResponse
                 .builder()
                 .message(message)
-                .code(ResultCode.PARAM_TYPE_ERROR)
+                .code(ResultCode.PARAM_TYPE_ERROR.getCode())
                 .build();
     }
 
@@ -76,7 +76,7 @@ public class GlobalExceptionTranslator {
         return BaseResponse
                 .builder()
                 .message(message)
-                .code(ResultCode.PARAM_VALID_ERROR)
+                .code(ResultCode.PARAM_VALID_ERROR.getCode())
                 .build();
     }
 
@@ -87,7 +87,7 @@ public class GlobalExceptionTranslator {
         String message = String.format("%s:%s", error.getField(), error.getDefaultMessage());
         return BaseResponse
                 .builder()
-                .code(ResultCode.PARAM_BIND_ERROR)
+                .code(ResultCode.PARAM_BIND_ERROR.getCode())
                 .message(message)
                 .build();
     }
@@ -101,7 +101,7 @@ public class GlobalExceptionTranslator {
         String message = String.format("%s:%s", path, violation.getMessage());
         return BaseResponse
                 .builder()
-                .code(ResultCode.PARAM_VALID_ERROR)
+                .code(ResultCode.PARAM_VALID_ERROR.getCode())
                 .message(message)
                 .build();
     }
@@ -111,7 +111,7 @@ public class GlobalExceptionTranslator {
         logger.error("404 Not Found", e);
         return BaseResponse
                 .builder()
-                .code(ResultCode.NOT_FOUND)
+                .code(ResultCode.NOT_FOUND.getCode())
                 .message(e.getMessage())
                 .build();
     }
@@ -121,7 +121,7 @@ public class GlobalExceptionTranslator {
         logger.error("Message Not Readable", e);
         return BaseResponse
                 .builder()
-                .code(ResultCode.MSG_NOT_READABLE)
+                .code(ResultCode.MSG_NOT_READABLE.getCode())
                 .message(e.getMessage())
                 .build();
     }
@@ -131,7 +131,7 @@ public class GlobalExceptionTranslator {
         logger.error("Request Method Not Supported", e);
         return BaseResponse
                 .builder()
-                .code(ResultCode.METHOD_NOT_SUPPORTED)
+                .code(ResultCode.METHOD_NOT_SUPPORTED.getCode())
                 .message(e.getMessage())
                 .build();
     }
@@ -141,7 +141,7 @@ public class GlobalExceptionTranslator {
         logger.error("Media Type Not Supported", e);
         return BaseResponse
                 .builder()
-                .code(ResultCode.MEDIA_TYPE_NOT_SUPPORTED)
+                .code(ResultCode.MEDIA_TYPE_NOT_SUPPORTED.getCode())
                 .message(e.getMessage())
                 .build();
     }
@@ -151,7 +151,7 @@ public class GlobalExceptionTranslator {
         logger.error("Service Exception", e);
         return BaseResponse
                 .builder()
-                .code(e.getResultCode())
+                .code(e.getResultCode().getCode())
                 .message(e.getMessage())
                 .build();
     }
@@ -161,7 +161,7 @@ public class GlobalExceptionTranslator {
         logger.error("Internal Server Error", e);
         return BaseResponse
                 .builder()
-                .code(ResultCode.INTERNAL_SERVER_ERROR)
+                .code(ResultCode.INTERNAL_SERVER_ERROR.getCode())
                 .message(e.getMessage())
                 .build();
     }

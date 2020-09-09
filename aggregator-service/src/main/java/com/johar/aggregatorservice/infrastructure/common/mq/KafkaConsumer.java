@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.JacksonUtils;
 import org.springframework.stereotype.Component;
 
@@ -33,10 +34,12 @@ public class KafkaConsumer {
     }
 
     @KafkaListener(topics = "count.view.topic")
-    public void onReceiveMessage(String message){
+    public void onReceiveMessage(String message, Acknowledgment acknowledgment){
         try {
             List<CountPerMinute> result = JacksonUtils.enhancedObjectMapper().readValue(message, getCollectionType(List.class, CountPerMinute.class));
             countViewDomainService.save(result);
+            // 数据保存成功后，再返回ack
+            acknowledgment.acknowledge();
         } catch (JsonProcessingException e) {
             log.error("KafkaConsumer Message: {}, {}", message, e);
         }

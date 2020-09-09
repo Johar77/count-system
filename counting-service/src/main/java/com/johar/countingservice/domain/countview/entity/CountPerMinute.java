@@ -24,7 +24,7 @@ public class CountPerMinute {
     private final Date countTime;
 
     @Getter
-    private final int videoId;
+    private final long videoId;
 
     @Getter
     private final ConcurrentHashMap<EventType, Integer> counts;
@@ -36,7 +36,7 @@ public class CountPerMinute {
         initMap();
     }
 
-    public CountPerMinute(Date countTime, int videoId, EventType eventType, Integer count) {
+    public CountPerMinute(Date countTime, long videoId, EventType eventType, Integer count) {
         this.countTime = countTime;
         this.videoId = videoId;
         this.counts = new ConcurrentHashMap<>(EventType.values().length);

@@ -1,29 +1,22 @@
 package com.johar.countingservice.domain.countview.service;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
+
 import com.johar.countingservice.domain.countview.entity.CountPerMinute;
 import com.johar.countingservice.domain.countview.entity.CountViewInfo;
 import com.johar.countingservice.domain.countview.entity.EventType;
+import com.johar.countingservice.domain.countview.repository.facade.CountViewInterface;
 import com.johar.countingservice.infrastructure.common.mq.KafkaProducer;
 import com.johar.countingservice.infrastructure.util.CountTimeGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * @ClassName: CountViewService
@@ -38,11 +31,14 @@ public class CountViewService {
 
     private KafkaProducer kafkaProducer;
 
+    private CountViewInterface countViewInterface;
+
     private final ConcurrentHashMap<Date, List<CountPerMinute>> countViewCache;
 
-    public CountViewService(@Value("${count.view.cache.initial.capacity}") int initialCapacity, KafkaProducer kafkaProducer) {
+    public CountViewService(@Value("${count.view.cache.initial.capacity}") int initialCapacity, KafkaProducer kafkaProducer, CountViewInterface countViewInterface) {
         this.kafkaProducer = kafkaProducer;
         this.countViewCache = new ConcurrentHashMap<>(initialCapacity);
+        this.countViewInterface = countViewInterface;
     }
 
     @Scheduled(cron = "1/59 * * * * ?")
@@ -73,7 +69,7 @@ public class CountViewService {
 
         if (countPerMinutes.contains(newValue)){
             countPerMinutes.stream().filter(countPerMinute -> countPerMinute.getVideoId() == newValue.getVideoId())
-                    .map(countPerMinute -> countPerMinute.add(countViewInfo.getEventType(), countViewInfo.getCount()))
+                    .map(countPerMinute -> countPerMinute.add(countViewInfo.getEventType(), (int)countViewInfo.getCount()))
                     .forEach(countPerMinute -> log.debug("{}-{}-{}-{}",
                             countPerMinute.getCountTime(),
                             countPerMinute.getVideoId(),
@@ -84,8 +80,12 @@ public class CountViewService {
         }
     }
 
+    public CountViewInfo findCountViewInfo(Long videoId, EventType eventType, @NotNull Date startTime, @NotNull Date endTime){
+        return this.countViewInterface.findCountViewInfo(videoId, eventType, startTime, endTime);
+    }
+
     private CountPerMinute toCountPerMinute(@NotNull CountViewInfo countViewInfo){
-        CountPerMinute countPerMinute = new CountPerMinute(countViewInfo.getCountTime(), countViewInfo.getVideoInfo().getId(), countViewInfo.getEventType(), countViewInfo.getCount());
+        CountPerMinute countPerMinute = new CountPerMinute(countViewInfo.getCountTime(), countViewInfo.getVideoInfo().getId(), countViewInfo.getEventType(), (int)countViewInfo.getCount());
         return countPerMinute;
     }
 }

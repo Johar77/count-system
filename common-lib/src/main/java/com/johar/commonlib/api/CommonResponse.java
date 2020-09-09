@@ -25,7 +25,7 @@ public class CommonResponse<T> extends BaseResponse {
     }
 
     public CommonResponse(ResultCode resultCode, String message, T data){
-        super(resultCode, message);
+        super(resultCode.getCode(), message);
         setData(data);
     }
 }
