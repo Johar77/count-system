@@ -17,6 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VideoStatsDao extends JpaRepository<VideoStatsPo, Long> {
 
-    @Query(value = "select count(a.count) from VideoStatsPo a where a.id = ?1 and a.eventType = ?2 and a.timestamp between ?3 and ?4")
+    @Query(value = "select sum(a.count) from VideoStatsPo a where a.videoInfoId = ?1 and a.eventType = ?2 and a.timestamp between ?3 and ?4")
     long countVideo(long videoId, EventType eventType, long startTime, long endTime);
 }

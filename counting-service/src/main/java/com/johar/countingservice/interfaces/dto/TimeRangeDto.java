@@ -17,7 +17,6 @@ import javax.validation.constraints.Past;
 @Valid
 public class TimeRangeDto {
     @NotNull
-    @Past
     private String startTime;
 
     @NotNull

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,7 +23,9 @@ import java.util.Date;
 @Slf4j
 public class CountViewApplicationService {
 
-    private final Date DEFAULT_MIN_TIME = new Date(1970, 1,1);
+    private final Date DEFAULT_MIN_TIME = new Calendar.Builder()
+            .setDate(2020, 1, 1)
+            .build().getTime();
 
     @Autowired
     private CountViewService countViewService;
@@ -39,7 +42,7 @@ public class CountViewApplicationService {
         return countViewService.findCountViewInfo(videoId, eventType, startTime, endTime);
     }
 
-    public CountViewInfo findEventCurrentCount(long vdieoId, EventType eventType){
-        return countViewService.findCountViewInfo(vdieoId, eventType, DEFAULT_MIN_TIME, new Date());
+    public CountViewInfo findEventCurrentCount(long videoId, EventType eventType){
+        return countViewService.findCountViewInfo(videoId, eventType, DEFAULT_MIN_TIME, new Date());
     }
 }
