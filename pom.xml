@@ -13,6 +13,7 @@
     <version>1.0.0</version>
     <name>count-system</name>
     <description>count system project</description>
+    <packaging>pom</packaging>
 
     <properties>
         <java.version>1.8</java.version>
