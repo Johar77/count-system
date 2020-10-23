@@ -1,10 +1,9 @@
 package com.johar.countingservice.infrastructure.common.mq;
 
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -28,8 +27,8 @@ public class KafkaConfig {
     private String bootstrapServers;
 
     @Bean
-    public KafkaAdmin kafkaAdmin(KafkaProperties properties){
-        KafkaAdmin admin = new KafkaAdmin(properties.buildAdminProperties());
+    public KafkaAdmin kafkaAdmin(){
+        KafkaAdmin admin = new KafkaAdmin(producerProperties());
         admin.setFatalIfBrokerNotAvailable(true);
         admin.setAutoCreate(true);
         return admin;
@@ -42,7 +41,7 @@ public class KafkaConfig {
         return new NewTopic(topicName, partition, replication);
     }
 
-    private Map<String, Object> producerProperties(){
+    public Map<String, Object> producerProperties(){
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -52,6 +51,7 @@ public class KafkaConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return props;
     }
+
     /**
      * 不使用spring boot的KafkaAutoConfiguration默认方式创建的DefaultKafkaProducerFactory，重新定义
      * @return
